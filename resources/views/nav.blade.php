@@ -34,7 +34,7 @@
             </div>
         </li>
         <form id="logout-button" method="POST" action="{{ route('logout') }}">
-            @scrf
+            @csrf
         </form>
         <!-- Dropdown -->
         @endauth
