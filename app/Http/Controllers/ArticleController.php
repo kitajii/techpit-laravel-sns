@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Article;
+use App\Tag;
 use App\Http\Requests\ArticleRequest;
+
 
 class ArticleController extends Controller
 {
@@ -31,6 +33,11 @@ class ArticleController extends Controller
         $article->fill($request->all());
         $article->user_id = $request->user()->id;
         $article->save();
+
+        $request->tags->each(function ($tagName) use ($article) { //入力されたタグをコレクションから1つずつ取り出し、処理する。$tagNameは取り出された１つを示す。
+            $tag = Tag::firstOrCreate(['name' => $tagName]); //入力されたタグが新規か既存か判定する。（Laravel公式関数）
+            $article->tags()->attach($tag); //attachで記事に結びついているtagsテーブルのレコードにタグ名を登録
+        });
         return redirect()->route('articles.index');
     }
 
